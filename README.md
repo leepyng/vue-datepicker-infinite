@@ -1,7 +1,8 @@
 # vue-datepicker-infinite
 easy datepicker of a vue 2.0 component
 <p align="center">
-![image](https://github.com/leepyng/vue-datepicker-infinite/blob/master/git/QQ20180508-153441.gif)
+<img src="https://github.com/leepyng/vue-datepicker-infinite/blob/master/git/QQ20180508-153441.gif" alt="Coverage Status">
+
 
 </p>
 # install
