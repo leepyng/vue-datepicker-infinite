@@ -5,6 +5,7 @@ easy datepicker of a vue 2.0 component
 
 
 </p>
+
 # install
 	download file into the project
 
