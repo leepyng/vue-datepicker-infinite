@@ -7,7 +7,9 @@ easy datepicker of a vue 2.0 component
 </p>
 
 # install
-	download file into the project
+	
+	npm install vue2-datepicker-infinite --save
+	
 
 # how to use
 	template:
