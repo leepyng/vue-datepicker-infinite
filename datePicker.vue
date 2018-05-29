@@ -338,7 +338,7 @@
 
 		box-sizing: border-box;
 		position: relative;
-		display: -webkit-box;
+		/*display: -webkit-box;*/
 		-webkit-box-orient: vertical;
 		-webkit-box-align: center;
 		-webkit-box-pack: end;
