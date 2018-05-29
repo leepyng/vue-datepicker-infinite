@@ -2,11 +2,16 @@
 easy datepicker of a vue 2.0 component
 <p align="center">
 
+
 <img src="https://github.com/leepyng/vue-datepicker-infinite/blob/master/git/QQ20180508-153441.gif" alt="Coverage Status">
 
+
 </p>
+
 # install
-	download file into the project
+	
+	npm install vue2-datepicker-infinite --save
+	
 
 # how to use
 	template:
