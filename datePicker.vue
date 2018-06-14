@@ -66,9 +66,10 @@
 				data:[],
 				year:(new Date()).getFullYear(),
 				month:(new Date()).getMonth()+1,
-				// month:10,
 				begin:'',
 				end:'',
+				lastDate:'',
+
 			}	
 		},
 		props:{	
@@ -86,6 +87,12 @@
 			},
 
 			start:{
+				type:Object,
+				default:function(){
+					return {}
+				}
+			},
+			last:{
 				type:Object,
 				default:function(){
 					return {}
@@ -115,17 +122,23 @@
 				this.end=val
 
 			},
+			last(val){
+				this.lastDate=val;
+
+			}
 		},
-
-
 		methods:{
 			//是否为不可选择日期
 			isDisable(day){
 				var start=this.start;
+				var lastDate=this.lastDate;
+				
 				
 				var s1 = (new Date(start.year+'-'+start.month+'-'+start.day)).getTime();
+				var s2 = (new Date(lastDate.year+'-'+lastDate.month+'-'+lastDate.day)).getTime();
             	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
-            	return s1>s?true:false;
+            
+            	return (s1>s||s2<s)?true:false;
 
 			},
 			//是否选中
@@ -202,6 +215,23 @@
             	if((s<s2)&&(s>s1))return true;
 
 			},
+			//获取天数差
+			getDaysSize(s1, s2){
+				var s1 = new Date(s1);
+	            var s2 = new Date(s2);
+
+	            var days = s2.getTime() - s1.getTime();
+	            var time = parseInt(days / (1000 * 60 * 60 * 24));
+	            return time;
+			},
+			//获取周几
+			getWeekday(date){
+	            var nowDate=new Date();
+	            var days=this.getDaysSize(nowDate,date);
+	            var mydate=new Date(date); 
+	            var myday=mydate.getDay()//注:0-6对应为星期日到星期六 
+	            return myday;
+			},
 
 			//将数据格式化表格日期格式
 	        monthDate(year,month){
@@ -266,6 +296,7 @@
 		
 			this.end=this.endDate;
 			this.begin=this.beginDate;
+			this.lastDate=this.last;
 			this.tableDate();
 			
 		}
@@ -275,26 +306,26 @@
 <style scoped>
 	.date-picker-box{
 		width: 100%;
-		height: 100%;
+		height: 120%;
 		position: fixed;
 		top: 0;
 		left: 0;
 		background-color: #fff;
-		z-index: 4;
+		z-index:24;
 	}
 	.dpb-title{
-	    height: .88rem;
+	    height: 50px;
 	    text-align: center;
-	    line-height: .88rem;
+	    line-height: 50px;
 	    background: #fff;
-	    font-size: .34rem;
+	    font-size: 15px;
 		position: relative;
 
 	}
 	.dpb-title>span{
 		position: absolute;
 		right: 12px;
-		line-height: .88rem;
+		line-height: 50px;
 		font-size: 13px;
 	}
 	.dpb-week>table{
@@ -314,10 +345,11 @@
 	}
 	.dpb-week-days{
 		position: relative;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-   	 	padding-bottom: 40%;
+	    width: 100%;
+	    height: 75%;
+	    overflow: auto;
+	    padding-bottom: 120px;
+
 	}
 	.dpbwd-table-month{
 		height: 30px;
@@ -345,9 +377,9 @@
 
 	}
 	.page-table-text{
-	    font-size: .13rem;
-	    height: .35rem;
-	    line-height: .35rem;
+	    font-size: 13px;
+	    height: 15px;
+	    line-height: 15px;
 	    overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
@@ -355,9 +387,9 @@
 	}
 	.page-table-note{
 		color: #ff5000;
-	    font-size: .12rem;
-	    height: .35rem;
-	    line-height: .35rem;
+	    font-size: 12px;
+	    height: 15px;
+	    line-height: 15px;
 	    overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
@@ -386,7 +418,7 @@
     	border-bottom-color: #e0e0e0!important;
 	}
 	.dpbwd-table-items-table>tbody>tr>td{
-	    height: 1.3rem;;
+	    height: 60px;;
 		text-align: center;
 		width: 14.28571%;
 		position: relative;
