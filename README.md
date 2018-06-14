@@ -51,6 +51,6 @@ easy datepicker of a vue 2.0 component
 	beginText:begin text name
 	endText:end text name
 	start:the calendar's begining date
-	start:the calendar's last date
+	last:the calendar's last date
 	beginDate: begin of the select
 	endDate:end of the select
