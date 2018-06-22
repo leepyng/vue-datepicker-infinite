@@ -50,6 +50,7 @@ easy datepicker of a vue 2.0 component
 	monthLength:max month lenght
 	beginText:begin text name
 	endText:end text name
+	isReverseAllow:allow to reverse date when select,
 	start:the calendar's begining date
 	last:the calendar's last date
 	beginDate: begin of the select

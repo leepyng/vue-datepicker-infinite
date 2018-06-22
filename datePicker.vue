@@ -85,7 +85,11 @@
 				type:String,
 				default:'离店'
 			},
-
+			isReverseAllow:{
+				type:Boolean,
+				default:true
+			},
+				
 			start:{
 				type:Object,
 				default:function(){
@@ -178,6 +182,13 @@
 					this.begin=day;
 					this.end='';
 				}else if(this.begin&&!this.end){
+					//若不支持反向选择，则选中日期
+					if(!this.isReverseAllow &&
+						this.getDaysSize((this.begin.year+'-'+this.begin.month+'-'+this.begin.day),
+						(day.year+'-'+day.month+'-'+day.day))<=0
+					  ) {
+						return;
+					}
 					//反选日期
 					if(this.isOpposite(day,this.begin)){
 						this.end=this.begin;
