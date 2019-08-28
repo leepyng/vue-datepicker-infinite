@@ -161,7 +161,7 @@
 				
 				
 				if(this.isDisable(day))return;
-				console.log(day);
+				
 				var day=day.year+'-'+day.month+'-'+day.day;
 
 				if(!this.begin||(this.begin&&this.end)){
