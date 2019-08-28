@@ -1,10 +1,6 @@
 <template>
-	
+
 		<div class="date-picker-box">
-			<div class="dpb-title">
-				<span @click="cancel">取消</span>
-				选择日期
-			</div>
 			<div class="dpb-week">
 				<table>
 					<thead>
@@ -23,7 +19,7 @@
 			<div class="dpb-week-days">
 				<div class="dpbwd-table" v-for="(item,index) in data">
 					<div class="dpbwd-table-month">
-						{{(month+index)>12?((year+1)+'-0'+(month+index-12)):(year+'-'+(month+index))}}
+						{{getNormalMonth(Number(index))}} 
 					</div>
 					<div class="dpbwd-table-items">
 						<table class="dpbwd-table-items-table">
@@ -47,16 +43,16 @@
 											{{day.day}}</strong>
 										</div>
 									</td>
-								
+
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
-	
+
 </template>
 <script>
 	export default{
@@ -70,9 +66,9 @@
 				end:'',
 				lastDate:'',
 
-			}	
+			}
 		},
-		props:{	
+		props:{
 			monthLength:{
 				type:Number,
 				default:6
@@ -85,37 +81,23 @@
 				type:String,
 				default:'离店'
 			},
-			isReverseAllow:{
-				type:Boolean,
-				default:true
-			},
-				
+
 			start:{
-				type:Object,
-				default:function(){
-					return {}
-				}
+				type:String,
+				default:''
 			},
 			last:{
-				type:Object,
-				default:function(){
-					return {}
-				}
+				type:String,
+				default:''
 			},
 			beginDate:{
-				type:Object,
-				default:function(){
-					return {}
-				}
+				type:String,
+				default:''
 			},
 			endDate:{
-				type:Object,
-				default:function(){
-					return {}
-				}
-			},
-			
-
+				type:String,
+				default:''
+			}
 		},
 		watch:{
 			beginDate(val){
@@ -134,14 +116,14 @@
 		methods:{
 			//是否为不可选择日期
 			isDisable(day){
+				var day=day.year+'-'+day.month+'-'+day.day;
 				var start=this.start;
 				var lastDate=this.lastDate;
-				
-				
-				var s1 = (new Date(start.year+'-'+start.month+'-'+start.day)).getTime();
-				var s2 = (new Date(lastDate.year+'-'+lastDate.month+'-'+lastDate.day)).getTime();
-            	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
-            
+
+				var s1 = (new Date(start)).getTime();
+				var s2 = (new Date(lastDate)).getTime();
+            	var s = (new Date(day)).getTime();
+
             	return (s1>s||s2<s)?true:false;
 
 			},
@@ -149,18 +131,19 @@
 			isActive(day){
 				var begin=this.begin;
 				var end=this.end;
-				var s1 = (new Date(begin.year+'-'+begin.month+'-'+begin.day)).getTime();
-				var s2 = (new Date(end.year+'-'+end.month+'-'+end.day)).getTime();
-            	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
+				var day=day.year+'-'+day.month+'-'+day.day;
+				var s1 = (new Date(begin)).getTime();
+				var s2 = (new Date(end)).getTime();
+            	var s = (new Date(day)).getTime();
             	return (s==s1||s==s2)?true:false
-				
+
 			},
 			//是否为开始日期
 			isBegin(day){
 				var begin=this.begin;
 				var end=this.end;
-				var s1 = (new Date(begin.year+'-'+begin.month+'-'+begin.day)).getTime();
-            	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
+				var s1 = (new Date(begin)).getTime();
+            	var s = (new Date(day)).getTime();
             	return s==s1?true:false
 
 			},
@@ -168,36 +151,32 @@
 			isEnd(day){
 				var begin=this.begin;
 				var end=this.end;
-				var s1 = (new Date(end.year+'-'+end.month+'-'+end.day)).getTime();
-            	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
+				var s1 = (new Date(end)).getTime();
+            	var s = (new Date(day)).getTime();
             	return s==s1?true:false
 
 			},
 			//选中日期
 			select(day){
 				
+				
 				if(this.isDisable(day))return;
+				console.log(day);
+				var day=day.year+'-'+day.month+'-'+day.day;
 
 				if(!this.begin||(this.begin&&this.end)){
 					this.begin=day;
 					this.end='';
 				}else if(this.begin&&!this.end){
-					//若不支持反向选择，则选中日期
-					if(!this.isReverseAllow &&
-						this.getDaysSize((this.begin.year+'-'+this.begin.month+'-'+this.begin.day),
-						(day.year+'-'+day.month+'-'+day.day))<=0
-					  ) {
-						return;
-					}
 					//反选日期
 					if(this.isOpposite(day,this.begin)){
 						this.end=this.begin;
 						this.begin=day;
-						
+
 					}else{
 						this.end=day;
 					}
-					//选中日期	
+					//选中日期
 					this.$emit('select',this.begin,this.end)
 				}
 
@@ -205,24 +184,38 @@
 			cancel(){
 				this.begin=this.beginDate;
 				this.end=this.endDate;
-				
+
 				this.$emit('select')
 			},
+			//获取日份,count=1为下一个月，count=-1为上一个月
+	        getNormalMonth(count) {
+
+	            var date = new Date();
+	            date.setMonth(date.getMonth()+count,1);
+	            var year = date.getFullYear();
+	            var month = date.getMonth() + 1;
+	            if (month < 10) { month = '0' + month };
+	            var time = String(year) + '-' + String(month);
+
+	            return time;
+	        },
 			//判断是否反转日期
 			isOpposite(end,begin){
-				var s1 = (new Date(begin.year+'-'+begin.month+'-'+begin.day)).getTime();
-            	var s2 = (new Date(end.year+'-'+end.month+'-'+end.day)).getTime();
-            	
+				var s1 = (new Date(begin)).getTime();
+            	var s2 = (new Date(end)).getTime();
+
             	return s2<s1?true:false;
 			},
 			//查看是否是已经选中的日期区间中
 			isInRange(day){
+
 				if(!day)return;
+				var day=day.year+'-'+day.month+'-'+day.day;
 				var begin=this.begin;
 				var end=this.end;
-				var s1 = (new Date(begin.year+'-'+begin.month+'-'+begin.day)).getTime();
-            	var s2 = (new Date(end.year+'-'+end.month+'-'+end.day)).getTime();
-            	var s = (new Date(day.year+'-'+day.month+'-'+day.day)).getTime();
+				var s1 = (new Date(begin)).getTime();
+            	var s2 = (new Date(end)).getTime();
+            	var s = (new Date(day)).getTime();
             	if((s<s2)&&(s>s1))return true;
 
 			},
@@ -239,16 +232,16 @@
 			getWeekday(date){
 	            var nowDate=new Date();
 	            var days=this.getDaysSize(nowDate,date);
-	            var mydate=new Date(date); 
-	            var myday=mydate.getDay()//注:0-6对应为星期日到星期六 
+	            var mydate=new Date(date);
+	            var myday=mydate.getDay()//注:0-6对应为星期日到星期六
 	            return myday;
 			},
 
 			//将数据格式化表格日期格式
 	        monthDate(year,month){
-	            
+
 	            //或取当前月份最后一天的日期
-	            var day = new Date(year,month,0); 
+	            var day = new Date(year,month,0);
 	            var lastDay=day.getDate();
 	            //计算当前月份第一天是星期几
 	            var weekday=this.getWeekday(year+'-'+month+'-01');
@@ -259,7 +252,7 @@
 	            //计算出当前月份每一天到数组中
 	            for(var day=1;day<=lastDay;day++){
 	            	var day=day<10?'0'+day:day;
-	            
+
 					data.push({day,month,year });
 	            }
 
@@ -278,7 +271,7 @@
 	                    result[(result.length-1)].push('');
 	                }
 	            }
-	            
+
 	            return result;
 	        },
 	        //初始化表格数据
@@ -304,12 +297,12 @@
 
 		},
 		mounted(){
-		
+
 			this.end=this.endDate;
 			this.begin=this.beginDate;
 			this.lastDate=this.last;
 			this.tableDate();
-			
+
 		}
 
 	}
@@ -394,7 +387,7 @@
 	    overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
-	
+
 	}
 	.page-table-note{
 		color: #ff5000;

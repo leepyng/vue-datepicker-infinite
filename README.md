@@ -32,16 +32,16 @@ easy datepicker of a vue 2.0 component
 				calendar:{
 					monthLength:6,
 					show:false,
-					start:{year:'2018',month:'07',day:'01'},
-					last:{year:'2018',month:'08',day:'01'},
-					begin:{year:'2018',month:'07',day:'02'},
-					end:{year:'2018',month:'07',day:'03'},
+					start:'2019-08-01',
+					last:'2019-08-03',
+					begin:'2019-08-01',
+					end:'2019-12-01',
 					select:(begin,end)=>{
 						this.calendar.show=false;
 						this.calendar.begin=begin;
 						this.calendar.end=end;
 					}
-				    },
+				},
 			}
 		}
 		
